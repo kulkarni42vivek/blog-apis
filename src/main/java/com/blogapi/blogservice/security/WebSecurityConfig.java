@@ -1,4 +1,4 @@
-package com.blogapi.blogservice.configuration;
+package com.blogapi.blogservice.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,8 +12,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/h2-console/**").permitAll().and().csrf()
-				.ignoringAntMatchers("/h2-console/**").and().headers().frameOptions().sameOrigin();
+		http.authorizeRequests()
+			.antMatchers("/h2-console/**", "/login/register", "/login/authenticate","/login/changePassword")
+			.permitAll()
+			.and().csrf()
+			.ignoringAntMatchers("/h2-console/**").and().headers().frameOptions().sameOrigin();
 	}
 
 }

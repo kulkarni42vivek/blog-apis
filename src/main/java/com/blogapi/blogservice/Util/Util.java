@@ -22,10 +22,18 @@ public class Util {
 	}
 
 	public static boolean isNeitherNullNorEmpty(Object obj) {
-		boolean isNullNorEmpty = false;
-		if (obj == null || "".equals(obj.toString().trim())) {
-			isNullNorEmpty = true;
+		boolean result = true ;
+		if(obj == null) {
+			return false;
 		}
-		return isNullNorEmpty;
+		else {
+			if(obj instanceof String) {
+				result = ((String) obj).trim().equals("");
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 	}
 }

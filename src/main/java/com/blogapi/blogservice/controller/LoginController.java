@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.blogapi.blogservice.model.LoginResponseModel;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
 import com.blogapi.blogservice.service.LoginService;
@@ -23,9 +24,9 @@ public class LoginController {
 	}
 
 	@PostMapping(value = "/authenticate")
-	public ResponseEntity<ResponseMessage> loginUser(@RequestBody UserModel loginRequest) {
-		ResponseMessage response = loginService.authenticate(loginRequest);
-		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	public ResponseEntity<LoginResponseModel> loginUser(@RequestBody UserModel loginRequest) {
+		LoginResponseModel response = loginService.authenticate(loginRequest);
+		return new ResponseEntity<LoginResponseModel>(response, HttpStatus.OK);
 	}
 
 	@PostMapping("/changePassword")
@@ -34,11 +35,5 @@ public class LoginController {
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/test")
-	public ResponseEntity<ResponseMessage> test() {
-		ResponseMessage res = new ResponseMessage();
-		res.setErrorMessage("sersad");
-		return new ResponseEntity<ResponseMessage>(res, HttpStatus.OK);
-	}
 
 }

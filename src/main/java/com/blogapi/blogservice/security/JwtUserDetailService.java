@@ -16,11 +16,11 @@ import com.blogapi.blogservice.service.LoginService;
 public class JwtUserDetailService implements UserDetailsService {
 
 	@Autowired
-	LoginService loginservice;
+	UserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserModel userDbObj = loginservice.LoadUserMst(username);
+		UserModel userDbObj = userService.LoadUserMst(username);
 		UserDetails userDetails = null;
 		if (Util.isNeitherNullNorEmpty(userDbObj)) {
 			userDetails = new User(userDbObj.getUserId(), userDbObj.getPassword(), new ArrayList<>());

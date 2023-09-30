@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/h2-console/**", "/login/register", "/login/authenticate","/login/changePassword")
 			.permitAll()
 			.and().csrf()
-			.ignoringAntMatchers("/h2-console/**").and().headers().frameOptions().sameOrigin();
+			.ignoringAntMatchers("/h2-console/**", "/login/register", "/login/authenticate","/login/changePassword").and().headers().frameOptions().sameOrigin();
 	}
 
 }

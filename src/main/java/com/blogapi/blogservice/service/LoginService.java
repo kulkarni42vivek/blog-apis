@@ -13,4 +13,7 @@ public interface LoginService {
 
 	ResponseMessage changePassword(UserModel loginRequest);
 
+
+	UserModel getUserInfo(UserModel loginRequest);
+
 }

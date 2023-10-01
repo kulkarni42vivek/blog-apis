@@ -2,6 +2,8 @@ package com.blogapi.blogservice.serviceImpl;
 
 import java.util.HashMap;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -92,6 +94,14 @@ public class LoginServiceImpl implements LoginService {
 	public ResponseMessage changePassword(UserModel loginRequest) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public UserModel getUserInfo(UserModel loginRequest) {
+		UserModel response=  userservice.LoadUserMst(loginRequest.getUserId());
+		response.setPassword(null);
+		return response;
 	}
 
 }

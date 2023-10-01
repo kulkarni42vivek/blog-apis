@@ -34,6 +34,10 @@ public class LoginController {
 		ResponseMessage response = loginService.changePassword(loginRequest);
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}
-
+	@PostMapping("/getUserInfo")
+	public ResponseEntity<UserModel> getUserInfo(@RequestBody UserModel loginRequest) {
+		UserModel response = loginService.getUserInfo(loginRequest);
+		return new ResponseEntity<UserModel>(response, HttpStatus.OK);
+	}
 
 }

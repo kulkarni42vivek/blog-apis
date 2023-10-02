@@ -28,6 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	JwtFilter jwtFilter;
+	
+	@Autowired
+	JwtAuthEntryPoint authEntryPoint;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -36,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.permitAll().anyRequest().authenticated()
 			.and().csrf()
 			.disable().cors().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and().exceptionHandling().authenticationEntryPoint(authEntryPoint);
 		
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	}

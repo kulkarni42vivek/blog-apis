@@ -3,21 +3,35 @@ package com.blogapi.blogservice.model;
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Post {
 	@Id
-	private int id ;
-	private String authorName ;
-	private String title ;
+	@SequenceGenerator(name = "post_seq", sequenceName = "post_seq", initialValue = 1001)
+	@GeneratedValue(generator = "post_seq", strategy = GenerationType.SEQUENCE )
+	private int postId;
+	
+	private String authorId;
+	private String title;
 	private String headerImagePath;
-	private String content ;
-	private Timestamp createdOn ;
-	private Timestamp updatedOn ;
-	private Timestamp publishedOn ;
-	private boolean isPublished ;
+	private String content;
+	private Timestamp createdOn;
+	private Timestamp updatedOn;
+	private Timestamp publishedOn;
+	private boolean isPublished;
 }

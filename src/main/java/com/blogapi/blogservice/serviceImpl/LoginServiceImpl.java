@@ -10,10 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.Util.Util;
 import com.blogapi.blogservice.model.LoginResponseModel;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
+import com.blogapi.blogservice.model.UserModelDTO;
 import com.blogapi.blogservice.repo.UserModelRepo;
 import com.blogapi.blogservice.security.JwtUserDetailService;
 import com.blogapi.blogservice.security.JwtUtils;
@@ -90,17 +92,40 @@ public class LoginServiceImpl implements LoginService {
 		return response;
 	}
 
-	@Override
-	public ResponseMessage changePassword(UserModel loginRequest) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 
 	@Override
 	public UserModel getUserInfo(UserModel loginRequest) {
 		UserModel response=  userservice.LoadUserMst(loginRequest.getUserId());
 		response.setPassword(null);
+		return response;
+	}
+
+
+	@Override
+	public ResponseMessage changePassword(UserModelDTO loginRequest) {
+		ResponseMessage response = new ResponseMessage();
+		try {
+			UserModel userModel = userRepo.getById(loginRequest.getUserId());
+			if(userModel!=null) {
+				if(Util.isNeitherNullNorEmpty(loginRequest.getOldPassword()) && Util.hashString(loginRequest.getOldPassword()).equals(userModel.getPassword())) {
+					userModel.setPassword(Util.hashString(loginRequest.getNewPassword()));
+					userRepo.save(userModel);
+					response.setErrorCode(200);
+					response.setErrorMessage("success");
+				}
+				else {
+					response.setErrorCode(Constants.ErrorCodes.WRONG_PASSWORD);
+					response.setErrorMessage("Wrong password");
+				}
+			}
+		}
+		catch(Exception e ) {
+			e.printStackTrace();
+			response.setErrorCode(Constants.ErrorCodes.WRONG_PASSWORD);
+			response.setErrorMessage("Wrong password");
+		}
 		return response;
 	}
 

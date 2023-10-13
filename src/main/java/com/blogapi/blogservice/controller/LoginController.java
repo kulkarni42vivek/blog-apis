@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.blogapi.blogservice.model.LoginResponseModel;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
+import com.blogapi.blogservice.model.UserModelDTO;
 import com.blogapi.blogservice.service.LoginService;
 
 @RestController
@@ -30,7 +31,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/changePassword")
-	public ResponseEntity<ResponseMessage> changePassword(@RequestBody UserModel loginRequest) {
+	public ResponseEntity<ResponseMessage> changePassword(@RequestBody UserModelDTO loginRequest) {
 		ResponseMessage response = loginService.changePassword(loginRequest);
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}

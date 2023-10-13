@@ -27,10 +27,10 @@ public class UserModel {
 	private String firstName ;
 	private String lastName ;
 	
-	@Column(name="mobile" , unique = true)
+	//@Column(name="mobile" , unique = true)
 	private String mobile ;
 	
-	@Column(name = "email", nullable = false )
+	//@Column(name = "email", nullable = false )
 	private String email ;
 	private Timestamp createOn;
 	private String userProfilePath ;

@@ -19,13 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
 public class Post {
-	@Id
-	@SequenceGenerator(name = "post_seq", sequenceName = "post_seq", initialValue = 1001)
-	@GeneratedValue(generator = "post_seq", strategy = GenerationType.SEQUENCE )
 	private int postId;
-	
 	private String authorId;
 	private String title;
 	private String headerImagePath;

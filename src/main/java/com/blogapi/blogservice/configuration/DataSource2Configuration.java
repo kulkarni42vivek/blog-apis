@@ -81,13 +81,17 @@ public class DataSource2Configuration {
 	}
 
     public void closeConnection(Connection con) {
-        if (con != null) {
-            try {
-                con.close();
+        try {
+			if (con != null && !con.isClosed()) {
+			    try {
+			        con.close();
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    }
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

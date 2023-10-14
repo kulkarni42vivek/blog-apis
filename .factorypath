@@ -68,5 +68,8 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.13.5/jackson-annotations-2.13.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.13.5/jackson-core-2.13.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar" enabled="true" runInBatchMode="false"/>
+<<<<<<< HEAD
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-configuration-processor/2.7.16/spring-boot-configuration-processor-2.7.16.jar" enabled="true" runInBatchMode="false"/>
+=======
+>>>>>>> ec0ccd7f6a39faf5874995a892f824c4f779d63d
 </factorypath>

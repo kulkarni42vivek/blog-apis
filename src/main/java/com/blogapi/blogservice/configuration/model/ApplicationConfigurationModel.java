@@ -1,18 +1,19 @@
 package com.blogapi.blogservice.configuration.model;
 
-import javax.validation.constraints.NotBlank;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
 
 
 @ConfigurationProperties(prefix = "app")
-@Validated
+@Component
+@Data
 public class ApplicationConfigurationModel {
-	@NotBlank(message = "email is mandatory")
 	private String email;
 
-	@NotBlank(message = "mobile  is mandatory") 
 	private String mobile;
 
+	private String postPath;
 }

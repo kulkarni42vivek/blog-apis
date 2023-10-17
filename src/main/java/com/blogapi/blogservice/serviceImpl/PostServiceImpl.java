@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
-import com.blogapi.blogservice.configuration.model.FilePathConfigurationModel;
+import com.blogapi.blogservice.configuration.model.ApplicationConfigurationModel;
 import com.blogapi.blogservice.model.Post;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
@@ -25,9 +25,9 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	DataSource2Configuration datasource;
-	
+
 	@Autowired
-	FilePathConfigurationModel filePathDetails;
+	ApplicationConfigurationModel configDetails;
 
 	@Autowired
 	FileService fileService;
@@ -77,7 +77,7 @@ public class PostServiceImpl implements PostService {
 	private ResponseMessage saveDocument(MultipartFile file, Post postModel, Connection conn, UserModel user) {
 		ResponseMessage repsonse = new ResponseMessage();
 		StringBuilder filePath = new StringBuilder();
-		filePath.append(filePathDetails.getPostPath()).append("/").append(postModel.getPostId()).append(file.getOriginalFilename());
+		filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append(file.getOriginalFilename());
 		repsonse = fileService.saveFile(file , filePath.toString());
 		return repsonse;
 	}

@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.GenreModel;
 import com.blogapi.blogservice.repo.MasterDao;
 
+@Repository
 public class MasterDaoImpl implements MasterDao {
 	
 	@Autowired

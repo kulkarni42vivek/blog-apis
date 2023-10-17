@@ -2,6 +2,8 @@ package com.blogapi.blogservice.repo;
 
 import java.sql.Connection;
 
+import org.springframework.stereotype.Service;
+
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
 import com.blogapi.blogservice.model.UserModelDTO;

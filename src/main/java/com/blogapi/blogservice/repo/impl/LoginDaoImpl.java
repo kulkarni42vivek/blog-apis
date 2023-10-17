@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
@@ -17,6 +18,7 @@ import com.blogapi.blogservice.model.UserModel;
 import com.blogapi.blogservice.model.UserModelDTO;
 import com.blogapi.blogservice.repo.LoginDao;
 
+@Repository
 public class LoginDaoImpl implements LoginDao {
 
 	@Autowired

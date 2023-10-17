@@ -42,4 +42,43 @@ public class PostController {
 		ResponseMessage response = postservice.updatePost(postModel, user);
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/updateImages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+			@RequestPart("post") Post postModel) {
+		var userData = SecurityContextHolder.getContext().getAuthentication();
+		var user = (UserModel) userData.getPrincipal();
+		ResponseMessage response = postservice.updateImages(files, postModel, user);
+		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/getPostInformationRelatedToUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+			@RequestPart("post") Post postModel) {
+		var userData = SecurityContextHolder.getContext().getAuthentication();
+		var user = (UserModel) userData.getPrincipal();
+		ResponseMessage response = postservice.updateImages(files, postModel, user);
+		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/getDocumentInformation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+			@RequestPart("post") Post postModel) {
+		var userData = SecurityContextHolder.getContext().getAuthentication();
+		var user = (UserModel) userData.getPrincipal();
+		ResponseMessage response = postservice.updateImages(files, postModel, user);
+		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	}
+	
+	// this call will be
+	@PostMapping(value = "/getAllPostData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+			@RequestPart("post") Post postModel) {
+		var userData = SecurityContextHolder.getContext().getAuthentication();
+		var user = (UserModel) userData.getPrincipal();
+		ResponseMessage response = postservice.updateImages(files, postModel, user);
+		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	}
+	
+	
 }

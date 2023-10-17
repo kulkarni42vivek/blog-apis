@@ -12,4 +12,6 @@ public interface PostService {
 
 	ResponseMessage updatePost(Post postModel, UserModel user);
 
+	ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user);
+
 }

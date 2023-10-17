@@ -21,7 +21,6 @@ import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
 import com.blogapi.blogservice.model.UserModelDTO;
 import com.blogapi.blogservice.repo.LoginDao;
-import com.blogapi.blogservice.repo.UserModelRepo;
 import com.blogapi.blogservice.security.JwtUserDetailService;
 import com.blogapi.blogservice.security.JwtUtils;
 import com.blogapi.blogservice.security.UserService;
@@ -36,9 +35,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	JwtUtils jwtUtils;
-
-	@Autowired
-	UserModelRepo userRepo;
 
 	@Autowired
 	Gson gson;
@@ -60,9 +56,7 @@ public class LoginServiceImpl implements LoginService {
 		ResponseMessage response = new ResponseMessage();
 		try {
 			user.setPassword(Util.hashString(user.getPassword()));
-			UserModel userres = userRepo.save(user);
-			response.setErrorCode(200);
-			response.setErrorMessage("User saved successfully");
+			response = loginDao.register(user);
 			return response;
 		} catch (Exception e) {
 			response.setErrorCode(205);
@@ -110,14 +104,12 @@ public class LoginServiceImpl implements LoginService {
 	public ResponseMessage changePassword(UserModelDTO loginRequest) {
 		ResponseMessage response = new ResponseMessage();
 		try {
-			UserModel userModel = userRepo.getById(loginRequest.getUserId());
+			UserModel userModel = loginDao.getUserDetails(loginRequest.getUserId());
 			if (userModel != null) {
 				if (Util.isNeitherNullNorEmpty(loginRequest.getOldPassword())
 						&& Util.hashString(loginRequest.getOldPassword()).equals(userModel.getPassword())) {
 					userModel.setPassword(Util.hashString(loginRequest.getNewPassword()));
-					userRepo.save(userModel);
-					response.setErrorCode(200);
-					response.setErrorMessage("success");
+					response = loginDao.updatePassword(userModel);
 				} else {
 					response.setErrorCode(Constants.ErrorCodes.WRONG_PASSWORD);
 					response.setErrorMessage("Wrong password");

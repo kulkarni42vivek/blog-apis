@@ -10,4 +10,10 @@ public interface LoginDao {
 
 	boolean saveGenres(UserModelDTO req, Connection conn);
 
+	ResponseMessage register(UserModel user);
+
+	UserModel getUserDetails(String username);
+
+	ResponseMessage updatePassword(UserModel userModel);
+
 }

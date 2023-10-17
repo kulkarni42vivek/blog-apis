@@ -60,4 +60,22 @@ public class LoginDaoImpl implements LoginDao {
 		return response;
 
 	}
+
+	@Override
+	public ResponseMessage register(UserModel user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserModel getUserDetails(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseMessage updatePassword(UserModel userModel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

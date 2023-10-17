@@ -18,6 +18,6 @@ public interface LoginService {
 	UserModel getUserInfo(UserModel loginRequest);
 
 
-	ResponseMessage saveGenres(UserModel loginRequest);
+	ResponseMessage saveGenres(UserModelDTO loginRequest);
 
 }

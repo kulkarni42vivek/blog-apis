@@ -48,6 +48,12 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	UserService userservice;
+	
+	@Autowired
+	DataSource2Configuration datasource;
+
+	@Autowired
+	LoginDao loginDao;
 
 	@Override
 	public ResponseMessage register(UserModel user) {
@@ -125,29 +131,31 @@ public class LoginServiceImpl implements LoginService {
 		return response;
 	}
 
-	@Autowired
-	DataSource2Configuration datasource;
-
-	@Autowired
-	LoginDao loginDao;
+	
 
 	@Override
-	public ResponseMessage saveGenres(UserModel req) {
-
+	public ResponseMessage saveGenres(UserModelDTO req) {
 		Connection conn = null;
 		ResponseMessage response = new ResponseMessage();
 		try {
 			conn = datasource.getMasterDBConnection();
-			response = loginDao.saveGenres(req, conn);
+			boolean result = loginDao.saveGenres(req, conn);
+			if(result) {
+				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
+				response.setErrorMessage("SUCCESS");
+			}
+			else {
+				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+				response.setErrorMessage("FAILED");
+			}
 		} catch (Exception e) {
+			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+			response.setErrorMessage("FAILED");
 			e.printStackTrace();
 			return response;
 		} finally {
-
 			datasource.closeConnection(conn);
 		}
 		return response;
-
 	}
-
 }

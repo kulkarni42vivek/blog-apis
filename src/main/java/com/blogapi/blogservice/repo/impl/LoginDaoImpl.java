@@ -1,6 +1,7 @@
 package com.blogapi.blogservice.repo.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,37 +11,51 @@ import com.blogapi.blogservice.configuration.DataSource2Configuration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
+import com.blogapi.blogservice.model.UserModelDTO;
 import com.blogapi.blogservice.repo.LoginDao;
 
 public class LoginDaoImpl implements LoginDao {
-	
+
 	@Autowired
 	DataSource2Configuration datasource;
 
 	@Override
-	public ResponseMessage saveGenres(UserModel req, Connection conn) {
-
-		Connection con = null;
-		QueryMaster qm = new QueryMaster();
+	public boolean saveGenres(UserModelDTO req, Connection conn) {
+		boolean response = false;
+		int[] resultRecords = null;
 		StringBuilder query = new StringBuilder();
-		ArrayList<Object> params = new ArrayList<>();
-		ResponseMessage response = new ResponseMessage();
-		int result = 0;
+		PreparedStatement pStmt = null;
+		int k =0 ;
 		try {
-			con = datasource.getMasterDBConnection();
-			query.append("update post_master set ");
-			result = qm.updateInsert(query.toString(), params, con, null);
-			if (result == 1) {
-				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
-				response.setErrorMessage("success");
+			query.append("INSERT INTO user_genre_mapping values(user_id , genre) values (?,?)");
+
+			pStmt = conn.prepareStatement(query.toString());
+
+			for (int j = 0; j < req.getGenre().size(); j++) {
+				int i = 0;
+
+				pStmt.setString(++i, req.getUserId());
+				pStmt.setString(++i, req.getGenre().get(k));
+				k++;
+				pStmt.addBatch();
+			}
+			resultRecords = pStmt.executeBatch();
+
+			if (resultRecords != null) {
+				for (int result : resultRecords) {
+					if (result >= 1) {
+						response = true;
+					} else {
+						response = false;
+						return response;
+					}
+				}
 			} else {
-				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
-		} finally {
-			datasource.closeConnection(con);
+			return false;
 		}
 		return response;
 

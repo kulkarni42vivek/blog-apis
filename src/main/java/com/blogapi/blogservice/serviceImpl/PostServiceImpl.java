@@ -88,4 +88,10 @@ public class PostServiceImpl implements PostService {
 		response  = postDao.updatePost(postModel, user);
 		return response ;
 	}
+
+	@Override
+	public ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

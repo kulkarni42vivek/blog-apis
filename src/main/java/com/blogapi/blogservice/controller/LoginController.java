@@ -40,5 +40,11 @@ public class LoginController {
 		UserModel response = loginService.getUserInfo(loginRequest);
 		return new ResponseEntity<UserModel>(response, HttpStatus.OK);
 	}
+	
+	@PostMapping("/saveGenres")
+	public ResponseEntity<ResponseMessage> saveGenres(@RequestBody UserModel loginRequest) {
+		ResponseMessage response = loginService.saveGenres(loginRequest);
+		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+	}
 
 }

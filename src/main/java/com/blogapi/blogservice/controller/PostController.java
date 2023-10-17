@@ -53,7 +53,7 @@ public class PostController {
 	}
 	
 	@PostMapping(value = "/getPostInformationRelatedToUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+	public ResponseEntity<ResponseMessage> getPostInformationRelatedToUser(@RequestPart("postImages") MultipartFile[] files,
 			@RequestPart("post") Post postModel) {
 		var userData = SecurityContextHolder.getContext().getAuthentication();
 		var user = (UserModel) userData.getPrincipal();
@@ -62,7 +62,7 @@ public class PostController {
 	}
 	
 	@PostMapping(value = "/getDocumentInformation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+	public ResponseEntity<ResponseMessage> getDocumentInformation(@RequestPart("postImages") MultipartFile[] files,
 			@RequestPart("post") Post postModel) {
 		var userData = SecurityContextHolder.getContext().getAuthentication();
 		var user = (UserModel) userData.getPrincipal();
@@ -72,7 +72,7 @@ public class PostController {
 	
 	// this call will be
 	@PostMapping(value = "/getAllPostData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+	public ResponseEntity<ResponseMessage> getAllPostData(@RequestPart("postImages") MultipartFile[] files,
 			@RequestPart("post") Post postModel) {
 		var userData = SecurityContextHolder.getContext().getAuthentication();
 		var user = (UserModel) userData.getPrincipal();

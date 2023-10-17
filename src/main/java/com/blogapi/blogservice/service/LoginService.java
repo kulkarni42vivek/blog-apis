@@ -17,4 +17,7 @@ public interface LoginService {
 
 	UserModel getUserInfo(UserModel loginRequest);
 
+
+	ResponseMessage saveGenres(UserModel loginRequest);
+
 }

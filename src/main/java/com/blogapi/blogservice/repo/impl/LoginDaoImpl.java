@@ -23,13 +23,13 @@ import com.blogapi.blogservice.repo.LoginDao;
 @Repository
 public class LoginDaoImpl implements LoginDao {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LoginDaoImpl.class);
+
 
 	@Autowired
 	DataSource2Configuration datasource;
 
 	@Override
-	public boolean saveGenres(UserModelDTO req, Connection conn) {
+	public boolean saveGenres(UserModelDTO req, Connection conn,Logger log) {
 		boolean response = false;
 		int[] resultRecords = null;
 		StringBuilder query = new StringBuilder();
@@ -69,7 +69,7 @@ public class LoginDaoImpl implements LoginDao {
 	}
 
 	@Override
-	public ResponseMessage register(UserModel user) {
+	public ResponseMessage register(UserModel user,Logger log) {
 		Connection con = null;
 		QueryMaster qm = new QueryMaster();
 		StringBuilder query = new StringBuilder();
@@ -89,7 +89,7 @@ public class LoginDaoImpl implements LoginDao {
 			params.add(user.getCreateOn());
 			query.append("values (?,?,?,?,?,?,?) ;");
 			
-			result = qm.updateInsert(query.toString(), params, con, logger);
+			result = qm.updateInsert(query.toString(), params, con, log);
 			if (result == 1) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("success");
@@ -106,7 +106,7 @@ public class LoginDaoImpl implements LoginDao {
 	}
 
 	@Override
-	public UserModel getUserDetails(String username) {
+	public UserModel getUserDetails(String username,Logger log) {
 		Connection conn = null;
 		QueryMaster qm = new QueryMaster();
 		StringBuilder sb = new StringBuilder();
@@ -118,7 +118,7 @@ public class LoginDaoImpl implements LoginDao {
 			sb.append("select * from user_mstr where user_id = ?");
 			param.add(username);
 			
-			ResultSet res = qm.select(sb.toString(), param, conn, null);
+			ResultSet res = qm.select(sb.toString(), param, conn, log);
 			if (res.next()) {
 				userModel.setUserId(res.getString("user_id"));
 				userModel.setPassword(res.getString("password"));
@@ -133,7 +133,7 @@ public class LoginDaoImpl implements LoginDao {
 	}
 
 	@Override
-	public ResponseMessage updatePassword(UserModel userModel) {
+	public ResponseMessage updatePassword(UserModel userModel,Logger log) {
 
 		Connection con = null;
 		QueryMaster qm = new QueryMaster();
@@ -148,7 +148,7 @@ public class LoginDaoImpl implements LoginDao {
 			params.add(userModel.getPassword());
 			params.add(userModel.getUserId());
 			
-			result = qm.updateInsert(query.toString(), params, con, null);
+			result = qm.updateInsert(query.toString(), params, con, log);
 			if (result == 1) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("success");

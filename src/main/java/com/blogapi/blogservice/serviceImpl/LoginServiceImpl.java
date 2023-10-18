@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,11 +53,11 @@ public class LoginServiceImpl implements LoginService {
 	LoginDao loginDao;
 
 	@Override
-	public ResponseMessage register(UserModel user) {
+	public ResponseMessage register(UserModel user, Logger log) {
 		ResponseMessage response = new ResponseMessage();
 		try {
 			user.setPassword(Util.hashString(user.getPassword()));
-			response = loginDao.register(user);
+			response = loginDao.register(user,log);
 			return response;
 		} catch (Exception e) {
 			response.setErrorCode(205);
@@ -66,10 +67,10 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public LoginResponseModel authenticate(UserModel loginRequest) {
+	public LoginResponseModel authenticate(UserModel loginRequest, Logger log) {
 		LoginResponseModel response = new LoginResponseModel();
 		try {
-			UserModel user = userservice.LoadUserMst(loginRequest.getUserId());
+			UserModel user = userservice.LoadUserMst(loginRequest.getUserId(),log);
 			if (user.getUserId() != null) {
 				if (Util.hashString(loginRequest.getPassword()).equals(user.getPassword())) {
 					response.setUserId(user.getUserId());
@@ -94,22 +95,22 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public UserModel getUserInfo(UserModel loginRequest) {
-		UserModel response = userservice.LoadUserMst(loginRequest.getUserId());
+	public UserModel getUserInfo(UserModel loginRequest, Logger log) {
+		UserModel response = userservice.LoadUserMst(loginRequest.getUserId(),log);
 		response.setPassword(null);
 		return response;
 	}
 
 	@Override
-	public ResponseMessage changePassword(UserModelDTO loginRequest) {
+	public ResponseMessage changePassword(UserModelDTO loginRequest, Logger log) {
 		ResponseMessage response = new ResponseMessage();
 		try {
-			UserModel userModel = loginDao.getUserDetails(loginRequest.getUserId());
+			UserModel userModel = loginDao.getUserDetails(loginRequest.getUserId(),log);
 			if (userModel != null) {
 				if (Util.isNeitherNullNorEmpty(loginRequest.getOldPassword())
 						&& Util.hashString(loginRequest.getOldPassword()).equals(userModel.getPassword())) {
 					userModel.setPassword(Util.hashString(loginRequest.getNewPassword()));
-					response = loginDao.updatePassword(userModel);
+					response = loginDao.updatePassword(userModel,log);
 				} else {
 					response.setErrorCode(Constants.ErrorCodes.WRONG_PASSWORD);
 					response.setErrorMessage("Wrong password");
@@ -126,12 +127,12 @@ public class LoginServiceImpl implements LoginService {
 	
 
 	@Override
-	public ResponseMessage saveGenres(UserModelDTO req) {
+	public ResponseMessage saveGenres(UserModelDTO req, Logger log) {
 		Connection conn = null;
 		ResponseMessage response = new ResponseMessage();
 		try {
 			conn = datasource.getMasterDBConnection();
-			boolean result = loginDao.saveGenres(req, conn);
+			boolean result = loginDao.saveGenres(req, conn,log);
 			if(result) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("SUCCESS");

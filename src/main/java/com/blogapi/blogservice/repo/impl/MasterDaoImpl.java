@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class MasterDaoImpl implements MasterDao {
 	DataSource2Configuration datasource ;
 
 	@Override
-	public List<GenreModel> getGenre() {
+	public List<GenreModel> getGenre(Logger log) {
 		Connection conn = null ;
 		List<GenreModel> response = new ArrayList<>();
 		QueryMaster qm = new QueryMaster();
@@ -28,7 +29,7 @@ public class MasterDaoImpl implements MasterDao {
 		try {
 			conn = datasource.getMasterDBConnection();
 			sb.append("select * from genre_master");
-			ResultSet res = qm.select(sb.toString(), null, conn, null);
+			ResultSet res = qm.select(sb.toString(), null, conn, log);
 			while (res.next()) {
 				GenreModel bean = new GenreModel();
 				bean.setGenreCode(res.getString("genre_code"));

@@ -9,4 +9,7 @@ public class Constants {
 		public static final int TRANSACTION_FAILED = 300;
 		public static final int TRANSACTION_SUCCESS = 200;
 	}
+	public interface SEQUENCE{
+		public static final String POST_SEQ = "POST_SEQ";
+	}
 }

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,9 @@ public class MasterServiceImpl implements MasterService {
 	MasterDao masterDao;
 
 	@Override
-	public List<GenreModel> getGenre() {
+	public List<GenreModel> getGenre(Logger log) {
 		List<GenreModel> response = new ArrayList<>();
-		response = masterDao.getGenre();
+		response = masterDao.getGenre(log);
 		return response;
 
 	}

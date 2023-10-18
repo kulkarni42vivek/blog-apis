@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.blogapi.blogservice.Util.Constants;
+import com.blogapi.blogservice.Util.IdGenerator;
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.Post;
@@ -22,9 +24,12 @@ public class PostDaoImpl implements  PostDao{
 	
 	@Autowired 
 	DataSource2Configuration datasource;
+	
+	@Autowired
+	IdGenerator idGenerator;
 
 	@Override
-	public ResponseMessage savePost(Post postModel, Connection conn) {
+	public ResponseMessage savePost(Post postModel, Connection conn, Logger log) {
 		Connection con = null;
 		QueryMaster qm = new QueryMaster();
 		StringBuilder query =  new StringBuilder();
@@ -33,8 +38,14 @@ public class PostDaoImpl implements  PostDao{
 		int result =  0;
 		try {
 			con = datasource.getMasterDBConnection();
-			query.append("update post_master set ");
-			result = qm.updateInsert(query.toString(), params, con, null);
+			query.append("insert into post_mstr (post_id , author_id , title, content ,created_on) values (? ,? ,?,?,current_timestamp)");
+			
+			params.add(idGenerator.getSequenctNext(Constants.SEQUENCE.POST_SEQ, log));
+			params.add(postModel.getAuthorId());
+			params.add(postModel.getTitle());
+			params.add(postModel.getContent());
+			
+			result = qm.updateInsert(query.toString(), params, con, log);
 			if(result == 1) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("success");
@@ -54,7 +65,7 @@ public class PostDaoImpl implements  PostDao{
 	}
 
 	@Override
-	public ResponseMessage updatePost(Post postModel, UserModel user) {
+	public ResponseMessage updatePost(Post postModel, UserModel user, Logger log) {
 		Connection con = null;
 		QueryMaster qm = new QueryMaster();
 		StringBuilder query =  new StringBuilder();
@@ -63,8 +74,16 @@ public class PostDaoImpl implements  PostDao{
 		int result =  0;
 		try {
 			con = datasource.getMasterDBConnection();
-			query.append("update post_master set ");
-			result = qm.updateInsert(query.toString(), params, con, null);
+			query.append("update post_mstr set  title=?, content=?  " );
+			params.add(postModel.getTitle());
+			params.add(postModel.getContent());
+			
+			query.append(" where post_id = ? and author_id =? ");
+			params.add(postModel.getPostId());
+			params.add(postModel.getAuthorId());
+			
+			
+			result = qm.updateInsert(query.toString(), params, con, log);
 			if(result == 1) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("success");

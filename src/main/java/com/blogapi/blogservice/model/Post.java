@@ -18,4 +18,6 @@ public class Post {
 	private Timestamp updatedOn;
 	private Timestamp publishedOn;
 	private boolean isPublished;
+	private long likes ;
+	private long dislikes ;
 }

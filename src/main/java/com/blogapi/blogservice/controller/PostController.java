@@ -1,5 +1,7 @@
 package com.blogapi.blogservice.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,13 +27,15 @@ public class PostController {
 
 	@Autowired
 	PostService postservice;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
 
 	@PostMapping(value = "/savePost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseMessage> savePost(@RequestPart("postImages") MultipartFile[] files,
 			@RequestPart("post") Post postModel) {
 		var userData = SecurityContextHolder.getContext().getAuthentication();
 		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.savePost(files, postModel, user);
+		ResponseMessage response = postservice.savePost(files, postModel, user,logger);
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}
 
@@ -39,46 +43,46 @@ public class PostController {
 	public ResponseEntity<ResponseMessage> updatePost(@RequestBody Post postModel) {
 		var userData = SecurityContextHolder.getContext().getAuthentication();
 		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.updatePost(postModel, user);
+		ResponseMessage response = postservice.updatePost(postModel, user,logger);
 		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/updateImages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
-			@RequestPart("post") Post postModel) {
-		var userData = SecurityContextHolder.getContext().getAuthentication();
-		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.updateImages(files, postModel, user);
-		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/getPostInformationRelatedToUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> getPostInformationRelatedToUser(@RequestPart("postImages") MultipartFile[] files,
-			@RequestPart("post") Post postModel) {
-		var userData = SecurityContextHolder.getContext().getAuthentication();
-		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.updateImages(files, postModel, user);
-		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/getDocumentInformation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> getDocumentInformation(@RequestPart("postImages") MultipartFile[] files,
-			@RequestPart("post") Post postModel) {
-		var userData = SecurityContextHolder.getContext().getAuthentication();
-		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.updateImages(files, postModel, user);
-		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
-	}
-	
-	// this call will be
-	@PostMapping(value = "/getAllPostData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseMessage> getAllPostData(@RequestPart("postImages") MultipartFile[] files,
-			@RequestPart("post") Post postModel) {
-		var userData = SecurityContextHolder.getContext().getAuthentication();
-		var user = (UserModel) userData.getPrincipal();
-		ResponseMessage response = postservice.updateImages(files, postModel, user);
-		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
-	}
-	
+//	@PostMapping(value = "/updateImages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public ResponseEntity<ResponseMessage> updateImages(@RequestPart("postImages") MultipartFile[] files,
+//			@RequestPart("post") Post postModel) {
+//		var userData = SecurityContextHolder.getContext().getAuthentication();
+//		var user = (UserModel) userData.getPrincipal();
+//		ResponseMessage response = postservice.updateImages(files, postModel, user,logger);
+//		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+//	}
+//	
+//	@PostMapping(value = "/getPostInformationRelatedToUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public ResponseEntity<ResponseMessage> getPostInformationRelatedToUser(@RequestPart("postImages") MultipartFile[] files,
+//			@RequestPart("post") Post postModel) {
+//		var userData = SecurityContextHolder.getContext().getAuthentication();
+//		var user = (UserModel) userData.getPrincipal();
+//		ResponseMessage response = postservice.updateImages(files, postModel, user);
+//		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+//	}
+//	
+//	@PostMapping(value = "/getDocumentInformation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public ResponseEntity<ResponseMessage> getDocumentInformation(@RequestPart("postImages") MultipartFile[] files,
+//			@RequestPart("post") Post postModel) {
+//		var userData = SecurityContextHolder.getContext().getAuthentication();
+//		var user = (UserModel) userData.getPrincipal();
+//		ResponseMessage response = postservice.updateImages(files, postModel, user);
+//		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+//	}
+//	
+//	// this call will be
+//	@PostMapping(value = "/getAllPostData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public ResponseEntity<ResponseMessage> getAllPostData(@RequestPart("postImages") MultipartFile[] files,
+//			@RequestPart("post") Post postModel) {
+//		var userData = SecurityContextHolder.getContext().getAuthentication();
+//		var user = (UserModel) userData.getPrincipal();
+//		ResponseMessage response = postservice.updateImages(files, postModel, user);
+//		return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
+//	}
+//	
 	
 }

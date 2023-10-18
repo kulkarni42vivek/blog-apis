@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.catalina.connector.Response;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,16 +34,19 @@ public class PostServiceImpl implements PostService {
 	FileService fileService;
 
 	@Override
-	public ResponseMessage savePost(MultipartFile[] files, Post postModel, UserModel user) {
+	public ResponseMessage savePost(MultipartFile[] files, Post postModel, UserModel user,Logger log) {
 		Connection conn = null;
 		ResponseMessage response = new ResponseMessage();
 		try {
 			conn = datasource.getMasterDBConnection();
 			conn.setAutoCommit(false);
-			response = postDao.savePost(postModel, conn);
+			response = postDao.savePost(postModel, conn,log);
 			if (response.getErrorCode() == Constants.ErrorCodes.TRANSACTION_SUCCESS) {
-				for (MultipartFile file : files) {
-					response = saveDocument(file, postModel, conn, user);
+				// - handling the first image 
+				MultipartFile headerFile= files[0];
+				processHeaderFile(postModel,headerFile,conn, log);
+				for (int i =1 ;i<files.length;i++ ) {
+					response = saveDocument(files[i], postModel, conn, user,log);
 					if (response.getErrorCode() != Constants.ErrorCodes.TRANSACTION_SUCCESS) {
 						response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 						response.setErrorMessage("ERROR IN FILE UPLOAD");
@@ -74,23 +78,36 @@ public class PostServiceImpl implements PostService {
 		return response;
 	}
 
-	private ResponseMessage saveDocument(MultipartFile file, Post postModel, Connection conn, UserModel user) {
+	private void processHeaderFile(Post postModel, MultipartFile headerFile, Connection conn, Logger log) {
+		
+		try {
+			ResponseMessage repsonse = new ResponseMessage();
+			StringBuilder filePath = new StringBuilder();
+			filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append(headerFile.getOriginalFilename());
+			repsonse = fileService.saveFile(headerFile , filePath.toString(),log);
+		}
+		catch(Exception e ) {
+			throw new FileProcessingFailedException();
+		}
+	}
+
+	private ResponseMessage saveDocument(MultipartFile file, Post postModel, Connection conn, UserModel user,Logger log) {
 		ResponseMessage repsonse = new ResponseMessage();
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append(file.getOriginalFilename());
-		repsonse = fileService.saveFile(file , filePath.toString());
+		repsonse = fileService.saveFile(file , filePath.toString(),log);
 		return repsonse;
 	}
 
 	@Override
-	public ResponseMessage updatePost(Post postModel, UserModel user) {
+	public ResponseMessage updatePost(Post postModel, UserModel user,Logger log) {
 		ResponseMessage response = new ResponseMessage();
-		response  = postDao.updatePost(postModel, user);
+		response  = postDao.updatePost(postModel, user,log);
 		return response ;
 	}
 
 	@Override
-	public ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user) {
+	public ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user,Logger log) {
 		// TODO Auto-generated method stub
 		return null;
 	}

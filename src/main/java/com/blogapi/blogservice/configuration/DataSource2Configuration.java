@@ -51,6 +51,8 @@ public class DataSource2Configuration {
 			try {
 				config.setJdbcUrl(configData.getUrl().trim());
 		        config.setDriverClassName(configData.getDriverClassName().trim());
+		        config.setUsername(configData.getUserName().trim());
+		        config.setPassword(configData.getPassword().trim());
 		        config.addDataSourceProperty("cachePrepStmts" ,"true");
 		        config.addDataSourceProperty("prepStmtCacheSize","250");
 		        config.addDataSourceProperty("prepStmtCacheSqlLimit","2048");

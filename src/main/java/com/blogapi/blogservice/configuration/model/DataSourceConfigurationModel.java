@@ -13,4 +13,6 @@ public class DataSourceConfigurationModel {
 	private String driverClassName;
 	private int maxConn;
 	private int minIdle ;
+	private String userName ;
+	private String password ;
 }

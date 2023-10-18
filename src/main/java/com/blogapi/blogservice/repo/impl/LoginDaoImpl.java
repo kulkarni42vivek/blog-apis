@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,8 @@ import com.blogapi.blogservice.repo.LoginDao;
 
 @Repository
 public class LoginDaoImpl implements LoginDao {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LoginDaoImpl.class);
 
 	@Autowired
 	DataSource2Configuration datasource;
@@ -85,7 +89,7 @@ public class LoginDaoImpl implements LoginDao {
 			params.add(user.getCreateOn());
 			query.append("values (?,?,?,?,?,?,?) ;");
 			
-			result = qm.updateInsert(query.toString(), params, con, null);
+			result = qm.updateInsert(query.toString(), params, con, logger);
 			if (result == 1) {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
 				response.setErrorMessage("success");

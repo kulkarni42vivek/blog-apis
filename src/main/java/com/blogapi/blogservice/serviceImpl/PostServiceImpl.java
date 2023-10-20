@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 				return response;
 			}
-		}S catch (InsertFailedException e) {
+		} catch (InsertFailedException e) {
 			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 			response.setErrorMessage("TRANSACTION FAILED");
 			return response;

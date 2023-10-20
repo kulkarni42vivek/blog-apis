@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/h2-console/**", "/login/register", "/login/authenticate","/login/changePassword")
+			.antMatchers("/h2-console/**", "/login/register", "/login/authenticate","/login/changePassword","/post/savePost")
 			.permitAll().anyRequest().authenticated()
 			.and().csrf()
 			.disable().cors().disable()

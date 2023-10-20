@@ -13,6 +13,6 @@ public interface PostService {
 
 	ResponseMessage updatePost(Post postModel, UserModel user,Logger log);
 
-	ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user,Logger log);
+	ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user, Logger logger);
 
 }

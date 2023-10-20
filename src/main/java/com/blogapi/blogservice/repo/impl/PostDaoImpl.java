@@ -13,6 +13,7 @@ import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.Util.IdGenerator;
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
 import com.blogapi.blogservice.configuration.QueryMaster;
+import com.blogapi.blogservice.exception.InsertFailedException;
 import com.blogapi.blogservice.model.Post;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
@@ -102,4 +103,72 @@ public class PostDaoImpl implements  PostDao{
 		return response;
 	}
 
+	@Override
+	public void updatePost(Post postModel, StringBuilder filePath, Connection conn, Logger log) throws InsertFailedException {
+		Connection con = null;
+		QueryMaster qm = new QueryMaster();
+		StringBuilder query =  new StringBuilder();
+		ArrayList<Object> params = new ArrayList<>();
+		ResponseMessage response = new ResponseMessage();
+		int result =  0;
+		try {
+			con = datasource.getMasterDBConnection();
+			query.append("update post_mstr set  headerPath=?  " );
+			params.add(postModel.getHeaderImagePath());
+			
+			query.append(" where post_id = ? and author_id =? ");
+			params.add(postModel.getPostId());
+			params.add(postModel.getAuthorId());
+			
+			
+			result = qm.updateInsert(query.toString(), params, con, log);
+			if(result == 1) {
+				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
+				response.setErrorMessage("success");
+			}
+			else {
+				throw new InsertFailedException("Insert failed exception");
+			}
+		}
+		catch(Exception e ) {
+			throw new InsertFailedException("Insert failed exception");
+		}
+		finally {
+			datasource.closeConnection(con);
+		}
+	}
+
+	@Override
+	public void insertDocumentMapping(Post postModel, String path, Connection conn, Logger log) throws InsertFailedException {
+		Connection con = null;
+		QueryMaster qm = new QueryMaster();
+		StringBuilder query =  new StringBuilder();
+		ArrayList<Object> params = new ArrayList<>();
+		ResponseMessage response = new ResponseMessage();
+		int result =  0;
+		try {
+			con = datasource.getMasterDBConnection();
+			query.append("insert into post_mstr_docs (post_id , path , created_on) values (? ,? ,current_timestamp)");
+			
+		
+			params.add(postModel.getPostId());
+			params.add(path);
+			
+			result = qm.updateInsert(query.toString(), params, con, log);
+			if(result == 1) {
+				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_SUCCESS);
+				response.setErrorMessage("success");
+			}
+			else {
+				throw new InsertFailedException("Insert failed exception");
+			}
+		}
+		catch(Exception e ) {
+			e.printStackTrace();
+			throw new InsertFailedException("Insert failed exception");
+		}
+		finally {
+			datasource.closeConnection(con);
+		}
+	}
 }

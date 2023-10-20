@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.configuration.DataSource2Configuration;
 import com.blogapi.blogservice.configuration.model.ApplicationConfigurationModel;
+import com.blogapi.blogservice.exception.FileProcessingFailedException;
+import com.blogapi.blogservice.exception.InsertFailedException;
 import com.blogapi.blogservice.model.Post;
 import com.blogapi.blogservice.model.ResponseMessage;
 import com.blogapi.blogservice.model.UserModel;
@@ -34,19 +36,19 @@ public class PostServiceImpl implements PostService {
 	FileService fileService;
 
 	@Override
-	public ResponseMessage savePost(MultipartFile[] files, Post postModel, UserModel user,Logger log) {
+	public ResponseMessage savePost(MultipartFile[] files, Post postModel, UserModel user, Logger log) {
 		Connection conn = null;
 		ResponseMessage response = new ResponseMessage();
 		try {
 			conn = datasource.getMasterDBConnection();
 			conn.setAutoCommit(false);
-			response = postDao.savePost(postModel, conn,log);
+			response = postDao.savePost(postModel, conn, log);
 			if (response.getErrorCode() == Constants.ErrorCodes.TRANSACTION_SUCCESS) {
-				// - handling the first image 
-				MultipartFile headerFile= files[0];
-				processHeaderFile(postModel,headerFile,conn, log);
-				for (int i =1 ;i<files.length;i++ ) {
-					response = saveDocument(files[i], postModel, conn, user,log);
+
+				MultipartFile headerFile = files[0];
+				processHeaderFile(postModel, headerFile, conn, log);
+				for (int i = 1; i < files.length; i++) {
+					saveDocument(files[i], postModel, conn, user, log);
 					if (response.getErrorCode() != Constants.ErrorCodes.TRANSACTION_SUCCESS) {
 						response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 						response.setErrorMessage("ERROR IN FILE UPLOAD");
@@ -57,6 +59,14 @@ public class PostServiceImpl implements PostService {
 				response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 				return response;
 			}
+		} catch (InsertFailedException e) {
+			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+			response.setErrorMessage("TRANSACTION FAILED");
+			return response;
+		} catch (FileProcessingFailedException e) {
+			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+			response.setErrorMessage("TRANSACTION FAILED");
+			return response;
 		} catch (Exception e) {
 			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
 			response.setErrorMessage("TRANSACTION FAILED");
@@ -78,37 +88,67 @@ public class PostServiceImpl implements PostService {
 		return response;
 	}
 
-	private void processHeaderFile(Post postModel, MultipartFile headerFile, Connection conn, Logger log) {
-		
+	private void processHeaderFile(Post postModel, MultipartFile headerFile, Connection conn, Logger log)
+			throws FileProcessingFailedException {
 		try {
-			ResponseMessage repsonse = new ResponseMessage();
 			StringBuilder filePath = new StringBuilder();
-			filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append(headerFile.getOriginalFilename());
-			repsonse = fileService.saveFile(headerFile , filePath.toString(),log);
-		}
-		catch(Exception e ) {
-			throw new FileProcessingFailedException();
+			filePath.append(configDetails.getPostPath()).append("\\").append(postModel.getPostId()).append("\\")
+					.append(headerFile.getOriginalFilename()).toString().replaceAll(" ", "").replaceAll("/", "").trim();
+			fileService.saveFile(headerFile, filePath.toString(), log);
+			postDao.updatePost(postModel, filePath, conn, log);
+		} catch (InsertFailedException e) {
+			throw new FileProcessingFailedException("file processing failed exception");
+		} catch (Exception e) {
+			throw new FileProcessingFailedException("file processing failed exception");
 		}
 	}
 
-	private ResponseMessage saveDocument(MultipartFile file, Post postModel, Connection conn, UserModel user,Logger log) {
-		ResponseMessage repsonse = new ResponseMessage();
+	private void saveDocument(MultipartFile file, Post postModel, Connection conn, UserModel user, Logger log)
+			throws FileProcessingFailedException, InsertFailedException {
 		StringBuilder filePath = new StringBuilder();
-		filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append(file.getOriginalFilename());
-		repsonse = fileService.saveFile(file , filePath.toString(),log);
-		return repsonse;
+		try {
+			filePath.append(configDetails.getPostPath()).append("/").append(postModel.getPostId()).append("\\")
+					.append(file.getOriginalFilename()).toString().replaceAll(" ", "").replaceAll("/", "").trim();
+			fileService.saveFile(file, filePath.toString(), log);
+			postDao.insertDocumentMapping(postModel, filePath.toString(), conn, log);
+		} catch (InsertFailedException e) {
+			throw new InsertFailedException("file processing failed exception");
+		} catch (Exception e) {
+			throw new FileProcessingFailedException("file processing failed exception");
+		}
 	}
 
 	@Override
-	public ResponseMessage updatePost(Post postModel, UserModel user,Logger log) {
+	public ResponseMessage updatePost(Post postModel, UserModel user, Logger log) {
 		ResponseMessage response = new ResponseMessage();
-		response  = postDao.updatePost(postModel, user,log);
-		return response ;
+		response = postDao.updatePost(postModel, user, log);
+		return response;
 	}
 
 	@Override
-	public ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user,Logger log) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseMessage updateImages(MultipartFile[] files, Post postModel, UserModel user, Logger log) {
+		Connection conn = null;
+		ResponseMessage response = new ResponseMessage();
+		try {
+			conn = datasource.getMasterDBConnection();
+			
+			for (int i = 1; i < files.length; i++) {
+				saveDocument(files[i], postModel, conn, user, log);
+				if (response.getErrorCode() != Constants.ErrorCodes.TRANSACTION_SUCCESS) {
+					response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+					response.setErrorMessage("ERROR IN FILE UPLOAD");
+				}
+			}
+
+		} catch (Exception e) {
+			response.setErrorCode(Constants.ErrorCodes.TRANSACTION_FAILED);
+			response.setErrorMessage("TRANSACTION FAILED");
+			return response;
+		} finally {
+			if (conn != null) {
+				datasource.closeConnection(conn);
+			}
+		}
+		return response;
 	}
 }

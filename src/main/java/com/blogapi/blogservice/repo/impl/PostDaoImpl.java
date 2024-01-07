@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.blogapi.blogservice.Util.Constants;
 import com.blogapi.blogservice.Util.IdGenerator;
-import com.blogapi.blogservice.configuration.DataSource2Configuration;
+import com.blogapi.blogservice.configuration.DataSourceConfiguration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.exception.InsertFailedException;
 import com.blogapi.blogservice.model.Post;
@@ -24,7 +24,7 @@ import com.blogapi.blogservice.repo.PostDao;
 public class PostDaoImpl implements  PostDao{
 	
 	@Autowired 
-	DataSource2Configuration datasource;
+	DataSourceConfiguration datasource;
 	
 	@Autowired
 	IdGenerator idGenerator;

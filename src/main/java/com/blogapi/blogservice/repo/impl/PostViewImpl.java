@@ -8,7 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.blogapi.blogservice.configuration.DataSource2Configuration;
+import com.blogapi.blogservice.configuration.DataSourceConfiguration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.Post;
 import com.blogapi.blogservice.model.UserModel;
@@ -19,7 +19,7 @@ public class PostViewImpl implements PostView {
 
 
 	@Autowired
-	DataSource2Configuration datasource;
+	DataSourceConfiguration datasource;
 
 	@Override
 	public List<Post> getPostByUser(UserModel user,Connection conn, Logger logger) {

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.blogapi.blogservice.configuration.DataSource2Configuration;
+import com.blogapi.blogservice.configuration.DataSourceConfiguration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.GenreModel;
 import com.blogapi.blogservice.repo.MasterDao;
@@ -18,7 +18,7 @@ import com.blogapi.blogservice.repo.MasterDao;
 public class MasterDaoImpl implements MasterDao {
 	
 	@Autowired
-	DataSource2Configuration datasource ;
+	DataSourceConfiguration datasource ;
 
 	@Override
 	public List<GenreModel> getGenre(Logger log) {

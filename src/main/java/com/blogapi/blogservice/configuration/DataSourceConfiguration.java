@@ -20,7 +20,7 @@ import com.zaxxer.hikari.HikariPoolMXBean;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-public class DataSource2Configuration {
+public class DataSourceConfiguration {
 
 
 	

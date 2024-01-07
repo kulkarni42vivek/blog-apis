@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.blogapi.blogservice.Util.Constants;
-import com.blogapi.blogservice.configuration.DataSource2Configuration;
+import com.blogapi.blogservice.configuration.DataSourceConfiguration;
 import com.blogapi.blogservice.configuration.QueryMaster;
 import com.blogapi.blogservice.model.GenreModel;
 import com.blogapi.blogservice.model.ResponseMessage;
@@ -26,7 +26,7 @@ public class LoginDaoImpl implements LoginDao {
 
 
 	@Autowired
-	DataSource2Configuration datasource;
+	DataSourceConfiguration datasource;
 
 	@Override
 	public boolean saveGenres(UserModelDTO req, Connection conn,Logger log) {
